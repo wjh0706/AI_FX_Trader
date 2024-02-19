@@ -11,7 +11,8 @@ def askGPT(headline,brief):
     # brief = 'The Bank of Japan kept its policy targets unchanged amid expectations among analysts that the bank is likely to end its negative-interest-rate policy early next year.'
 
     response = g4f.ChatCompletion.create(
-        model=g4f.models.gpt_4,
+        #model=g4f.models.gpt_4,
+         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": f"Act as a sentiment analysis service of a financial platform. Based only on the following headline and brief '{headline}\n{brief}', provide a summary of the sentiment for the related forex or the currency of related country. Provide only the sentiment per forex or the currency of related country in JSON format e.g. {{'USD': 'positive'}}. The sentiment can be positive for buy, negative for sell or neutral for hold position. Provide only {{'error':'NA'}}  in JSON format if the headline is unrelated to a forex."}],
     )  # Alternative model setting
     response = response.replace('\n', '')
