@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from requests.exceptions import HTTPError, RequestException, Timeout
 from bs4 import BeautifulSoup
@@ -7,6 +8,10 @@ import sys
 import datetime
 import time
 import random
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
 
 def date_to_timestamp(date_str):
@@ -26,6 +31,22 @@ def date_to_timestamp(date_str):
         print(f"Error converting date: {e}")
         return None
 
+def get_briefs_from_webpage(soupm,size):
+    script_tags = soup.find_all('script')
+    pattern = re.compile(r'expandedContent:"(.*?)"')
+    briefs = []
+    for script_tag in script_tags:
+        script_content = script_tag.string
+        
+        if script_content and 'window.__NUXT__=' in script_content:
+            script_content_cleaned = script_content.replace('\\u002', '').replace('\\r', '').replace('\\n', ' ').replace('&nbsp;','')
+            matches = pattern.findall(script_content_cleaned)
+            briefs = matches
+            break
+    if len(briefs) == size:
+        return briefs
+    else:
+        return ['' for i in range(size)]
 
 
 try:
@@ -71,6 +92,9 @@ try:
                 briefs = [li.get_text(strip=True) for li in soup.find_all('li', class_='text-body tldr__item bold')]
                 dates = [date.get_text(strip=True).replace('\n', '') for date in soup.find_all('div', class_='publisher-details__date')]
                 timestamps = [date_to_timestamp(date) for date in dates]
+                if len(briefs) != len(headlines):
+                    briefs = get_briefs_from_webpage(soup,len(headlines))
+                    
 
                 # Construct the absolute path to the JSONL file within the directory
                 jsonl_file_path = os.path.join(jsonl_dir, f'{page_num}.jsonl')

@@ -5,3 +5,4 @@ g4f==0.2.1.5
 PyExecJS==1.5.1
 undetected_chromedriver==3.0.3
 platformdirs==2.4.0
+openai==1.13.3
