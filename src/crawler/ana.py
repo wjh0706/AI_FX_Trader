@@ -4,6 +4,9 @@ import os
 import json
 from openai import OpenAI
 import httpx
+import time
+import datetime
+import random
 
 # https://github.com/xtekky/gpt4free?tab=readme-ov-file#chatcompletion
 
@@ -86,12 +89,12 @@ for file_name in jsonl_files:
             jsonl.append(analysis)
 
             request_count += 1
-            if request_count % 100 == 0:
-                print("Reached 40 files. Waiting for 5 to 10 minutes...")
-                time.sleep(random.randint(5*60, 10*60))
-            else:
-                # Wait for seconds before starting to analyse the next jsonl file
-                time.sleep(random.randint(1, 5))
+            # if request_count % 100 == 0:
+            #     print("Reached 40 files. Waiting for 5 to 10 minutes...")
+            #     time.sleep(random.randint(5*60, 10*60))
+            # else:
+            #     # Wait for seconds before starting to analyse the next jsonl file
+            #     time.sleep(random.randint(1, 5))
 
 
     jsonl_file_path = os.path.join(ana_dir, file_name)
@@ -102,6 +105,6 @@ for file_name in jsonl_files:
             # Write JSON string followed by newline character
             writer.write(json_line + '\n')
     
-    current_time = datetime.datetime.now()
-    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-    print(f"{file_name} completed at {formatted_time}")
+    # current_time = datetime.datetime.now()
+    # formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    # print(f"{file_name} completed at {formatted_time}")
